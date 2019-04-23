@@ -5,21 +5,25 @@
 char* read_tip (char* arc_name){ // Funcao para ler a dica do dia
 	FILE *tips_db = fopen(arc_name, "r");
 	if (tips_db == NULL){
-		printf("Archive not found\n");
+		printf("File not found\n");
 		return NULL;
 	}
 	char *tip = malloc ((sizeof (char))*512), ch;
 	int index = 0, line = rand()%count_lines(arc_name);
 
-	/*while (){
+	while (line != 0){
+		ch = fgetc(tips_db);
+		if (ch == '\n'){
+			line = line - 1;
+		}
+	}
 
-	}*/
-
-	while (ch != '\n'){
+	do{
 		ch = fgetc(tips_db);
 		tip[index] = ch;
 		index++;
-	}
+	}while (ch != '\n');
+
 	tip[index] = '\0';
 
 	fclose(tips_db);
@@ -29,7 +33,7 @@ char* read_tip (char* arc_name){ // Funcao para ler a dica do dia
 int count_lines (char* arc_name){ // Funcao para contar as linhas do arquivo
 	FILE* archive = fopen(arc_name, "r");
 	if (archive == NULL){
-		printf("Archive not found\n");
+		printf("File not found\n");
 		return -1;
 	}
 	int arc_lines = 0, eof;
@@ -46,6 +50,15 @@ int count_lines (char* arc_name){ // Funcao para contar as linhas do arquivo
 	return arc_lines;
 }
 
-void main(){
-	printf("%s\n", read_tip("banco_de_dicas.txt"));
+void create_tip (char* arc_name, char* tip){
+	FILE* archive = fopen(arc_name, "w");
+	if (archive == NULL){
+		printf("Error in opening file.\n");
+		return;
+	}
+
+	fprintf(archive, "%s", tip);
+
+	fclose(archive);
+	return;
 }

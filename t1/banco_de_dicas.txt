@@ -1,2 +1,14 @@
 Bjarne Stroustrup: Gosto do meu código elegante e eficiente. A lógica deve ser direta para dificultar o encobrimento de bugs, as dependências mínimas para facilitar a manuntenção, o tratamento de erro completo de acordo com uma estratégia clara e o desempenho próximo do mais eficiente de modo a não incitar as pessoas a tornarem o código confuso com otimizações sorrateiras. O código limpo faz vem apenas uma coisa.
 Grady Booch: Um código limpo é simples e direto. Ele é tão bem legível quanto uma prosa bem escrita. Ele jamais torna confuso o objetivo de desenvolvedor, em vez disso, ele está repleto de abstrações claras e linhas de controle objetivas.
+dasfasd
+dasfasdsg
+adrg
+heargsf
+sgedf
+adhss
+asdgajt
+sfgfs
+hrzd\sfgaer
+gfa
+srasfa
+rgaofdi

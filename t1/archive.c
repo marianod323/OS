@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <time.h>
 #include "archive.h"
 
 char* read_tip (char* arc_name){ // Funcao para ler a dica do dia
@@ -9,16 +11,16 @@ char* read_tip (char* arc_name){ // Funcao para ler a dica do dia
 		return NULL;
 	}
 	char *tip = malloc ((sizeof (char))*512), ch;
-	int index = 0, line = rand()%count_lines(arc_name);
-
-	while (line != 0){
+	srand(time(NULL)+getpid()); // Utiliza o pid para gerar uma seed
+	int index = 0, line = rand()%count_lines(arc_name);	// Sorteia a dica do dia
+	while (line != 0){	// Chega à linha sorteada
 		ch = fgetc(tips_db);
 		if (ch == '\n'){
 			line = line - 1;
 		}
 	}
 
-	do{
+	do{	// Copia a linha sorteada ao array auxiliar
 		ch = fgetc(tips_db);
 		tip[index] = ch;
 		index++;
@@ -36,7 +38,7 @@ int count_lines (char* arc_name){ // Funcao para contar as linhas do arquivo
 		printf("File not found\n");
 		return -1;
 	}
-	int arc_lines = 0, eof;
+	int arc_lines = 0;
 	char ch;
 
 	while(!feof(archive)){
@@ -50,15 +52,15 @@ int count_lines (char* arc_name){ // Funcao para contar as linhas do arquivo
 	return arc_lines;
 }
 
-void create_tip (char* arc_name, char* tip){
+int create_line (char* arc_name, char* tip){ // Funcao para criar a dica do dia
 	FILE* archive = fopen(arc_name, "w");
 	if (archive == NULL){
-		printf("Error in opening file.\n");
-		return;
+		printf("Error in creating file.\n");
+		return -1;
 	}
 
 	fprintf(archive, "%s", tip);
 
 	fclose(archive);
-	return;
+	return 1;
 }

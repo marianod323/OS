@@ -1,1 +1,1 @@
-gfa
+Um bom código precisa atender bem à quatro atributos principais: manutenção, confiabilidade, eficiência e usabilidade - Sommerville

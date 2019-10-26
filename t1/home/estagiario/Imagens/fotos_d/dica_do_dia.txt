@@ -1,1 +1,1 @@
-srasfa
+O código deve ter funções e variáveis claras e objetivas

@@ -1,14 +1,11 @@
-Bjarne Stroustrup: Gosto do meu código elegante e eficiente. A lógica deve ser direta para dificultar o encobrimento de bugs, as dependências mínimas para facilitar a manuntenção, o tratamento de erro completo de acordo com uma estratégia clara e o desempenho próximo do mais eficiente de modo a não incitar as pessoas a tornarem o código confuso com otimizações sorrateiras. O código limpo faz vem apenas uma coisa.
-Grady Booch: Um código limpo é simples e direto. Ele é tão bem legível quanto uma prosa bem escrita. Ele jamais torna confuso o objetivo de desenvolvedor, em vez disso, ele está repleto de abstrações claras e linhas de controle objetivas.
-dasfasd
-dasfasdsg
-adrg
-heargsf
-sgedf
-adhss
-asdgajt
-sfgfs
-hrzd\sfgaer
-gfa
-srasfa
-rgaofdi
+Um bom código precisa atender bem à quatro atributos principais: manutenção, confiabilidade, eficiência e usabilidade - Sommerville
+O programa deve responder bem a seus propósitos - Weinberg
+O programa deve cumprir o prazo e o orçamento - Weinberg
+Definição clara do propósito do código e suas funções - Hoare
+O código deve estar bem comentado
+O código deve seguir os mesmos padrões de identação do projeto
+O código deve ter funções e variáveis claras e objetivas
+Evite comentários óbvios
+Separe seu código em grupos com quebras de linha, não deixe todas as linhas juntas
+Não deixe as linhas de código muito grandes, pois dificulta a leitura
+Tente criar códigos reutilizáveis

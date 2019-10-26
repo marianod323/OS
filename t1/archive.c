@@ -52,7 +52,7 @@ int count_lines (char* arc_name){ // Funcao para contar as linhas do arquivo
 	return arc_lines;
 }
 
-int create_line (char* arc_name, char* tip){ // Funcao para criar a dica do dia
+int create_line (char* arc_name, char* tip){ // Funcao para criar o arquivo da dica do dia
 	FILE* archive = fopen(arc_name, "w");
 	if (archive == NULL){
 		printf("Error in creating file.\n");

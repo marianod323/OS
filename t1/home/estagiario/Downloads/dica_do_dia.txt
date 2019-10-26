@@ -1,1 +1,0 @@
-Não deixe as linhas de código muito grandes, pois dificulta a leitura

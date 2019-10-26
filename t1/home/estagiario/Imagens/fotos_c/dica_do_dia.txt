@@ -1,1 +1,0 @@
-O código deve seguir os mesmos padrões de identação do projeto

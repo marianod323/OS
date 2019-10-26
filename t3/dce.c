@@ -6,85 +6,83 @@
 #include <stdbool.h>
 #include <semaphore.h>
 
-sem_t rm_lot, rm_lock, card[5], mutex, bols;
-int lot = 0, lock_table[5];
+//
+// Trabalho 3: DCE - Sistemas Operacionais
+// Mariano Dorneles de Freitas
+//
 
-bool isLocked(){
-	int lock;
-	sem_getvalue(&rm_lock, &lock);
-	return (lock == 0);
-}
+sem_t ficha[5], porta, bols;
+int qnt, tabela_guia[5];
 
 void *bolsista(){
 	while (true){
 		sem_wait(&bols);
-		sem_wait(&rm_lock);
-		printf("Bolsista: Cheguei, vou trabalhar um pouquinho!\n");
+		printf("Bolsista: Cheguei, vou trabalhar um pouquinho!\n\n");
 		int i;
-		for(i = 0; i < 5; i++, lot--){
-			printf("Bolsista: Checando os documentos da ficha %d\n", lock_table[i]);
-			sem_post(&card[i]);
-			printf("Bolsista: Tudo certo com a ficha %d, entregando carteirinha...\n", lock_table[i]);
+		// Percorre o vetor ficha e atende cada ficha por ordem de chegada
+		for(i = 0; i < 5; i++){
+			printf("Bolsista: Checando os documentos da ficha %d\n", tabela_guia[i]);
+			printf("Bolsista: Tudo certo com a ficha %d, entregando carteirinha...\n\n", tabela_guia[i]);
+			sem_post(&ficha[i]);
 		}
-		printf("Bolsista: Ja trabalhei bastante, vou dar um rolezinho...\n\n");
-		sem_post(&rm_lock);
+		qnt = 0; // Reinicia o contador de alunos na sala
+		printf("Bolsista: Ja trabalhei bastante, sai, abri a porta e vou dar um rolezinho...\n\n");
+		sem_post(&porta);
 	}
 }
 
-void aluno(int num_ficha){
+// Thread do aluno
+void aluno(int id_ficha){
 	while (true){
-		sem_wait(&mutex);
-		sem_wait(&rm_lot);
-		if(isLocked()){
-			sem_wait(&rm_lock);
-			sem_post(&rm_lock);
+		sem_wait(&porta); // Fecha a porta
+		int num_fila = qnt++; // Pega um "numero de atendimento"
+		tabela_guia[num_fila] = id_ficha; // Registra o ID no numero de atendimento correspondente
+		printf("Ficha %d: Entrei, trouxe meus documentos!\n", id_ficha);
+		
+		if(qnt == 5){
+			sem_post(&bols); // Chama o bolsista
 		}
-		int num_fila = lot;
-		lock_table[lot] = num_ficha;
-		lot += 1;
-		printf("Ficha %d: Entrei, trouxe meus documentos!\n", num_ficha);
-		if(lot == 5){
-			sem_post(&bols);
-		} 
-		sem_post(&mutex);
-		printf("Ficha %d: Vou esperar pela minha carteirinha!\n", num_ficha);
-		sem_wait(&card[num_fila]);
-		printf("Ficha %d: Recebi minha carteirinha!\n", num_ficha);
-		sem_post(&rm_lot);
+		else{
+			sem_post(&porta); // Abre a porta
+		}
+		printf("Ficha %d: Vou esperar pela minha carteirinha!\n", id_ficha);
+		// Aguarda pela sua carteira
+		sem_wait(&ficha[num_fila]);
+		printf("Ficha %d: Recebi minha carteirinha!\n\n", id_ficha);
 		sleep(rand()%10);
 	}
 }
 
+// Função que inicializa uma ficha (thread de aluno)
 void* aluno_thread(void* arg){
-	int num_ficha = *(int *) arg;
-	aluno(num_ficha);
+	int id_ficha = *(int *) arg;
+	aluno(id_ficha);
 }
 
 int main(int argc, char *argv[]){
-	//gcc -o dce dce.c -lpthread
-	srand(time(NULL));
+	// gcc -o dce dce.reborn.c -lpthread
+    srand(time(NULL));
 	int n_fichas = 5, i;
-	sem_init(&rm_lot, 0, 5);
-	sem_init(&rm_lock, 0, 1);
-	sem_init(&mutex, 0, 1);
-	sem_init(&bols, 0, 0);
+	sem_init(&porta, 0, 1); // Porta para mutex
+	sem_init(&bols, 0, 0);  // Semáforo do bolsista (inicia bloqueado)
 	for (i = 0; i < 5; i++){
-		sem_init(&card[i], 0, 0);
+		sem_init(&ficha[i], 0, 0);
 	}
-
-	// Verifica se foi passado o número de fichas por parâmetro e ele é maior que 5
+    
+    // Verifica se foi passado o número de fichas por parâmetro e ele é maior que 5
 	if (argc > 1 && atoi(argv[1]) > 5)
 		n_fichas = atoi(argv[1]);
 	pthread_t fichas[n_fichas], dce;
-	int num_ficha[n_fichas];
+	int id_ficha[n_fichas];
 
 	// Inicializa as threads
 	pthread_create(&dce, NULL, bolsista, NULL);
 	for(i = 0; i < n_fichas; i++){
-		num_ficha[i] = i;
-		pthread_create(&fichas[i], NULL, aluno_thread, &num_ficha[i]);
+		id_ficha[i] = i;
+		pthread_create(&fichas[i], NULL, aluno_thread, &id_ficha[i]);
 	}
 
+	// Join das threads
 	pthread_join(dce, NULL);
 	for(i = 0; i < n_fichas; i++){
 		pthread_join(fichas[i], NULL);
